@@ -16,18 +16,32 @@
 <script>
   import { goto } from '$app/navigation';
   import { increment, decrement, page } from './../stores/pageStore.js';
+  import { loading } from './../stores/loadStore.js';
+  import Card from '../components/card.svelte';
+  import Loading from '../components/loading.svelte';
   export let movies;
+  let section = 'popular';
   $: console.log(movies);
 
   const getMovies = async () => {
-    let url = `https://api.themoviedb.org/3/movie/popular?api_key=b092fbfe96fe122af99d753ce8372286&page=${$page}`;
+    loading.set(true);
+    let url = `https://api.themoviedb.org/3/movie/${section}?api_key=b092fbfe96fe122af99d753ce8372286&page=${$page}`;
     try {
       const response = await fetch(url);
       const data = await response.json();
       movies = data.results;
+      movies && setTimeout(() => loading.set(false), 500);
     } catch (error) {
+      loading.set(false);
+
       console.log(error);
     }
+  };
+
+  const changeSection = (newSection) => {
+    $page = 1;
+    section = newSection;
+    getMovies();
   };
 
   function routeToPage(slug, cat) {
@@ -36,19 +50,51 @@
 </script>
 
 <div class="home">
-  <h1 class="home__title">Popular Movies</h1>
-  <div class="home__card-wrapper">
-    {#each movies as movie}
-      <div class="card">
-        <img
-          class="card__img"
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={movie.original_title}
-        />
-        <h1 class="card__title">{movie.original_title}</h1>
-      </div>
-    {/each}
+  <div class="home__banner">
+    <h1>yuknonton!</h1>
+    <p>The site provides complete details about movies.</p>
   </div>
+  <div class="home__tab">
+    <h1
+      class={`home__title ${
+        section === 'popular' ? 'home__title--active' : ''
+      }`}
+      on:click={() => changeSection('popular')}
+    >
+      Popular
+    </h1>
+    <h1
+      class={`home__title ${
+        section === 'top_rated' ? 'home__title--active' : ''
+      }`}
+      on:click={() => changeSection('top_rated')}
+    >
+      Top Rated
+    </h1>
+    <h1
+      class={`home__title ${
+        section === 'now_playing' ? 'home__title--active' : ''
+      }`}
+      on:click={() => changeSection('now_playing')}
+    >
+      Now Playing
+    </h1>
+    <h1
+      class={`home__title ${
+        section === 'upcoming' ? 'home__title--active' : ''
+      }`}
+      on:click={() => changeSection('upcoming')}
+    >
+      Upcoming
+    </h1>
+  </div>
+  {#if $loading === true}
+    <Loading />
+  {:else if $loading === false}
+    <div class="home__card-wrapper">
+      <Card {movies} />
+    </div>
+  {/if}
   <div>
     <button
       disabled={$page === 1}
@@ -79,15 +125,59 @@
     width: 100%;
     height: 100%;
   }
+  .home__banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    line-height: 1.5;
+    color: white;
+    background-image: radial-gradient(
+      circle 610px at 5.2% 51.6%,
+      rgba(5, 8, 114, 1) 0%,
+      rgba(7, 3, 53, 1) 97.5%
+    );
+    width: 100%;
+    height: 300px;
+    margin-bottom: 40px;
+    padding: 20px;
+  }
+  .home__banner h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
   .home__title {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: rgba(7, 3, 53, 1);
+  }
+  .home__title--active {
+    width: 15%;
+    margin-bottom: 20px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 8px solid rgba(7, 3, 53, 1);
+    transition: all 0.5s ease-in-out;
+  }
+  .home__tab {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid rgba(7, 3, 53, 1);
+    width: 100%;
+    height: 50px;
   }
   .home__card-wrapper {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 30px;
+    /* transition: all 5s ease-in-out; */
   }
   .home__button {
     margin: 10px;
@@ -112,32 +202,14 @@
   .home__button:disabled:hover {
     font-weight: normal;
   }
-  .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin: 10px;
-    padding-bottom: 20px;
-    background-color: white;
-    width: 200px;
-    height: auto;
-    border-radius: 10px;
-    cursor: pointer;
-    /* box-shadow: 6px 6px 18px -10px rgba(0, 0, 0, 0.25); */
-  }
-  .card:hover {
-    font-weight: bold;
-  }
-  .card__img {
-    border-radius: 10px;
-    width: 100%;
-    height: 100%;
-  }
-  .card__title {
-    font-size: 1.5em;
-    text-align: center;
-    padding-top: 20px;
-    /* font-weight: bold; */
+
+  @media only screen and (min-width: 1200px) {
+    .home__title--active {
+      color: white;
+      background-color: rgba(7, 3, 53, 1);
+      width: 25%;
+      text-align: center;
+      padding: 15px;
+    }
   }
 </style>
