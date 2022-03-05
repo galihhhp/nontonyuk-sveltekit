@@ -14,14 +14,15 @@
 </script>
 
 <script>
-  import { goto } from '$app/navigation';
   import { increment, decrement, page } from './../stores/pageStore.js';
-  import { loading } from './../stores/loadStore.js';
+  import { loading, err } from './../stores/loadStore.js';
   import Card from '../components/card.svelte';
   import Loading from '../components/loading.svelte';
+  import ErrorMsg from './../components/errorMsg.svelte';
+
   export let movies;
   let section = 'popular';
-  $: console.log(movies);
+  $: console.log(movies[9].id);
 
   const getMovies = async () => {
     loading.set(true);
@@ -30,11 +31,15 @@
       const response = await fetch(url);
       const data = await response.json();
       movies = data.results;
-      movies && setTimeout(() => loading.set(false), 500);
+      movies && setTimeout(() => loading.set(false), 300);
+
+      if (!movies) {
+        setTimeout(() => loading.set(false), 300);
+        $err = 'No movies found';
+      }
     } catch (error) {
       loading.set(false);
-
-      console.log(error);
+      $err = 'Something went wrong';
     }
   };
 
@@ -43,17 +48,14 @@
     section = newSection;
     getMovies();
   };
-
-  function routeToPage(slug, cat) {
-    goto(`/news/${slug}/${cat}`);
-  }
 </script>
 
 <div class="home">
   <div class="home__banner">
-    <h1>yuknonton!</h1>
+    <h1>nontonyuk!</h1>
     <p>The site provides complete details about movies.</p>
   </div>
+
   <div class="home__tab">
     <h1
       class={`home__title ${
@@ -88,30 +90,38 @@
       Upcoming
     </h1>
   </div>
+
+  {#if $err !== null}
+    <ErrorMsg error={$err} />
+  {/if}
+
   {#if $loading === true}
     <Loading />
   {:else if $loading === false}
     <div class="home__card-wrapper">
-      <Card {movies} />
+      {#each movies as movie}
+        <Card {movie} />
+      {/each}
+    </div>
+
+    <div>
+      <button
+        disabled={$page === 1}
+        class="home__button"
+        on:click={() => {
+          decrement();
+          getMovies();
+        }}>PREV</button
+      >
+      <button
+        class="home__button"
+        on:click={() => {
+          increment();
+          getMovies();
+        }}>NEXT</button
+      >
     </div>
   {/if}
-  <div>
-    <button
-      disabled={$page === 1}
-      class="home__button"
-      on:click={() => {
-        decrement();
-        getMovies();
-      }}>PREV</button
-    >
-    <button
-      class="home__button"
-      on:click={() => {
-        increment();
-        getMovies();
-      }}>NEXT</button
-    >
-  </div>
 </div>
 
 <style>
@@ -177,7 +187,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-top: 30px;
-    /* transition: all 5s ease-in-out; */
+    /* transition: all 0.5s 1s ease-in-out; */
   }
   .home__button {
     margin: 10px;

@@ -1,17 +1,19 @@
 <script>
-  export let movies;
+  import { goto } from '$app/navigation';
+
+  export let movie;
+
+  const toMovieDetails = (id) => goto(`/${id}`);
 </script>
 
-{#each movies as movie}
-  <div class="card">
-    <img
-      class="card__img"
-      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-      alt={movie.original_title}
-    />
-    <h1 class="card__title">{movie.original_title}</h1>
-  </div>
-{/each}
+<div class="card" on:click={() => toMovieDetails(movie.id)}>
+  <img
+    class="card__img"
+    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+    alt={movie.original_title}
+  />
+  <h1 class="card__title">{movie.original_title}</h1>
+</div>
 
 <style>
   .card {
