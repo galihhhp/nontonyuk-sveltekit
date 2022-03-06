@@ -21,7 +21,9 @@
       rgba(5, 8, 114, 1) 0%,
       rgba(7, 3, 53, 1) 97.5%
     );
-    width: 100vw;
+    width: calc(100vw - 55px);
+    margin-right: 10px;
+    margin-left: 9px;
     height: 200px;
     margin-bottom: 40px;
     padding: 20px;

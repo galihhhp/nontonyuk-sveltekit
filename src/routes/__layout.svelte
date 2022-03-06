@@ -1,10 +1,5 @@
 <script>
-  import { goto } from '$app/navigation';
   import '../app.css';
-
-  function routeToHome() {
-    goto('/');
-  }
 </script>
 
 <svelte:head>

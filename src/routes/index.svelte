@@ -1,47 +1,36 @@
-<!-- <script context="module">
-  export const load = async () => {
-    let page = 1;
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=b092fbfe96fe122af99d753ce8372286&page=${page}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    return {
-      props: {
-        movies: data.results,
-      },
-    };
-  };
-</script> -->
 <script>
-  // import { increment, decrement, page } from './../stores/pageStore.js';
-  // import { loading, err } from './../stores/loadStore.js';
-  // import Card from '../components/card.svelte';
-  // import Loading from '../components/loading.svelte';
-  // import ErrorMsg from './../components/errorMsg.svelte';
+  import Loading from '../components/loading.svelte';
+  import ErrorMsg from './../components/errorMsg.svelte';
+  import { loading, err } from './../stores/loadStore.js';
   import { goto } from '$app/navigation';
   import Banner from '../components/banner.svelte';
+  import Card from '../components/card.svelte';
 
-  export let movies;
-  // let section = 'popular';
+  let movies = null;
+  let query = '';
 
-  // const getMovies = async () => {
-  //   loading.set(true);
-  //   let url = `https://api.themoviedb.org/3/movie/${section}?api_key=b092fbfe96fe122af99d753ce8372286&page=${$page}`;
-  //   try {
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     movies = data.results;
-  //     movies && setTimeout(() => loading.set(false), 300);
+  const searchHandler = async () => {
+    loading.set(true);
+    let url = `http://api.themoviedb.org/3/search/movie?api_key=b092fbfe96fe122af99d753ce8372286&query=${query}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      movies = data.results;
+      movies && setTimeout(() => loading.set(false), 200);
 
-  //     if (!movies) {
-  //       setTimeout(() => loading.set(false), 300);
-  //       $err = 'No movies found';
-  //     }
-  //   } catch (error) {
-  //     loading.set(false);
-  //     $err = 'Something went wrong';
-  //   }
-  // };
+      if (!movies) {
+        setTimeout(() => loading.set(false), 300);
+        $err = 'No movies found';
+      }
+    } catch (error) {
+      loading.set(false);
+      $err = 'Something went wrong';
+    }
+  };
+
+  const onKeyPress = () => {
+    if (query) searchHandler();
+  };
 </script>
 
 <Banner>
@@ -54,8 +43,26 @@
 <button class="btn-homepage" on:click={() => goto('/movie')}>Homepage</button>
 <p class="or">or</p>
 <div class="search">
-  <input type="text" placeholder="Search" />
-  <button>Search</button>
+  <input
+    type="text"
+    placeholder="Search"
+    bind:value={query}
+    on:keypress={onKeyPress}
+  />
+  <button on:click={searchHandler}>Search</button>
+</div>
+<div class="card-wrapper">
+  {#if $err !== null}
+    <ErrorMsg error={$err} />
+  {/if}
+
+  {#if $loading === true}
+    <Loading />
+  {:else if movies !== null && $loading === false}
+    {#each movies as movie}
+      <Card {movie} />
+    {/each}
+  {/if}
 </div>
 
 <style>
@@ -74,7 +81,6 @@
     padding: 20px;
     cursor: pointer;
   }
-
   .btn-homepage:hover {
     background-color: rgba(5, 8, 114, 1);
     width: 90%;
@@ -88,6 +94,7 @@
   .search {
     display: flex;
     width: 100%;
+    margin-bottom: 40px;
   }
   .search input {
     width: 80%;
@@ -106,6 +113,16 @@
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
+  }
+  .card-wrapper {
+    border-top: 1px solid #000;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: row;
+    /* max-width: 100vw; */
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   @media only screen and (min-width: 1200px) {
     .banner__desc {
