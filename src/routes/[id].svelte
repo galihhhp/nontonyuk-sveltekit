@@ -62,6 +62,13 @@
         <p>{ph.name}</p>
       {/each}
     </div>
+    <h2
+      sveltekit:prefetch
+      class="recommendation"
+      on:click={() => goto(`/movie/recommendation/${movie.id}`)}
+    >
+      Recommendation
+    </h2>
   </div>
 </div>
 
@@ -147,6 +154,15 @@
     margin-bottom: 5px;
   }
 
+  .recommendation {
+    align-self: start;
+    background-color: rgba(7, 3, 53, 1);
+    color: white;
+    cursor: pointer;
+    font-size: 25px !important;
+    padding: 15px;
+    width: 100%;
+  }
   @media only screen and (min-width: 1200px) {
     .details-wrapper {
       display: flex;
