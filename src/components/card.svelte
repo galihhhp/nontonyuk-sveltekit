@@ -3,7 +3,7 @@
 
   export let movie;
 
-  const toMovieDetails = (id) => goto(`/${id}`);
+  const toMovieDetails = (id) => goto(`/movie/${id}`);
 </script>
 
 <div class="card" on:click={() => toMovieDetails(movie.id)}>

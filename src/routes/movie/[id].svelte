@@ -15,13 +15,15 @@
 
 <script>
   import { goto } from '$app/navigation';
+  import Banner from '../../components/banner.svelte';
 
   export let movie;
 </script>
 
+<Banner><h1 class="banner__title">Movie Details</h1></Banner>
 <div class="details-wrapper">
   <div class="details-wrapper--left">
-    <button class="btn-back" on:click={() => goto('/')}>Back</button>
+    <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
     <h1>{movie.original_title}</h1>
     <img
       class="card__img"
@@ -82,6 +84,10 @@
     margin-top: 40px;
     width: 100vw;
     min-height: 100vh;
+  }
+  .banner__title {
+    font-size: 3rem;
+    font-weight: bold;
   }
   .details-wrapper .details-wrapper--left {
     width: 50%;

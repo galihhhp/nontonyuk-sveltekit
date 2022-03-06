@@ -14,15 +14,18 @@
 </script>
 
 <script>
+  import Banner from './../../../components/banner.svelte';
   import { goto } from '$app/navigation';
   import Card from '../../../components/card.svelte';
 
   export let movies;
 </script>
 
+<Banner>
+  <h1 class="banner__title">Recomendations</h1>
+</Banner>
 <div class="container">
-  <button class="btn-back" on:click={() => goto('/')}>Back</button>
-  <h1 class="title">Recomendations</h1>
+  <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
   {#if movies.length === 0}
     <p>No movies found</p>
   {/if}
@@ -39,8 +42,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
     flex-wrap: wrap;
-    margin-top: 50px;
   }
   .container .btn-back {
     padding: 10px;
@@ -54,12 +57,9 @@
     cursor: pointer;
     background-color: rgba(5, 8, 114, 1);
   }
-  .container .title {
-    font-size: 5rem;
-    margin-bottom: 1rem;
-    margin-top: 1rem;
+  .banner__title {
+    font-size: 3rem;
     font-weight: bold;
-    align-self: start;
   }
   .card-wrapper {
     display: flex;
