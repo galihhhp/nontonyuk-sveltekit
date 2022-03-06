@@ -22,7 +22,6 @@
 
   export let movies;
   let section = 'popular';
-  $: console.log(movies[9].id);
 
   const getMovies = async () => {
     loading.set(true);
@@ -47,6 +46,7 @@
     $page = 1;
     section = newSection;
     getMovies();
+    window.scrollTo(0, 0);
   };
 </script>
 
