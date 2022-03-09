@@ -14,65 +14,74 @@
 </script>
 
 <script>
+  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import Banner from '../../components/banner.svelte';
 
   export let movie;
+  let isMounted = false;
+
+  onMount(() => {
+    isMounted = true;
+  });
 </script>
 
 <Banner><h1 class="banner__title">Movie Details</h1></Banner>
-<div class="details-wrapper">
-  <div class="details-wrapper--left">
-    <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
-    <h1>{movie.original_title}</h1>
-    <img
-      class="card__img"
-      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-      alt={movie.original_title}
-    />
-    <button class="btn-web" on:click={() => goto(movie.homepage)}
-      >Website</button
-    >
+{#if isMounted}
+  <div class="details-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+    <div class="details-wrapper--left">
+      <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
+      <h1>{movie.original_title}</h1>
+      <img
+        class="card__img"
+        src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+        alt={movie.original_title}
+      />
+      <button class="btn-web" on:click={() => goto(movie.homepage)}
+        >Website</button
+      >
+    </div>
+    <div class="details-wrapper--right">
+      <!-- <h1>{movie.original_title}</h1> -->
+      <div>
+        <h2>Tagline</h2>
+        <p>{movie.tagline === '' ? '-' : `${movie.tagline}`}</p>
+      </div>
+      <div>
+        <h2>Status</h2>
+        <p>{movie.status}</p>
+      </div>
+      <div>
+        <h2>Release Date</h2>
+        <p>{movie.release_date}</p>
+      </div>
+      <div>
+        <h2>Overview</h2>
+        <p>{movie.overview}</p>
+      </div>
+      <div class="genres">
+        <h2>Genres</h2>
+        {#each movie.genres as genre}
+          <p>{genre.name}</p>
+        {/each}
+      </div>
+      <div class="ph">
+        <h2>Production Companies</h2>
+        {#each movie.production_companies as ph}
+          <p>{ph.name}</p>
+        {/each}
+      </div>
+      <h2
+        sveltekit:prefetch
+        class="recommendation"
+        on:click={() => goto(`/movie/recommendation/${movie.id}`)}
+      >
+        Recommendation
+      </h2>
+    </div>
   </div>
-  <div class="details-wrapper--right">
-    <!-- <h1>{movie.original_title}</h1> -->
-    <div>
-      <h2>Tagline</h2>
-      <p>{movie.tagline === '' ? '-' : `${movie.tagline}`}</p>
-    </div>
-    <div>
-      <h2>Status</h2>
-      <p>{movie.status}</p>
-    </div>
-    <div>
-      <h2>Release Date</h2>
-      <p>{movie.release_date}</p>
-    </div>
-    <div>
-      <h2>Overview</h2>
-      <p>{movie.overview}</p>
-    </div>
-    <div class="genres">
-      <h2>Genres</h2>
-      {#each movie.genres as genre}
-        <p>{genre.name}</p>
-      {/each}
-    </div>
-    <div class="ph">
-      <h2>Production Companies</h2>
-      {#each movie.production_companies as ph}
-        <p>{ph.name}</p>
-      {/each}
-    </div>
-    <h2
-      sveltekit:prefetch
-      class="recommendation"
-      on:click={() => goto(`/movie/recommendation/${movie.id}`)}
-    >
-      Recommendation
-    </h2>
-  </div>
-</div>
+{/if}
 
 <style>
   .details-wrapper {

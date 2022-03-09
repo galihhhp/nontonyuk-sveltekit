@@ -14,11 +14,18 @@
 </script>
 
 <script>
+  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
   import Banner from './../../../components/banner.svelte';
   import { goto } from '$app/navigation';
   import Card from '../../../components/card.svelte';
 
   export let movies;
+  let isMounted = false;
+
+  onMount(() => {
+    isMounted = true;
+  });
 </script>
 
 <Banner>
@@ -28,12 +35,13 @@
   <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
   {#if movies.length === 0}
     <p>No movies found</p>
+  {:else if isMounted}
+    <div class="card-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+      {#each movies as movie}
+        <Card {movie} />
+      {/each}
+    </div>
   {/if}
-  <div class="card-wrapper">
-    {#each movies as movie}
-      <Card {movie} />
-    {/each}
-  </div>
 </div>
 
 <style>

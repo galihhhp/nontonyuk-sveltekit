@@ -14,6 +14,8 @@
 </script>
 
 <script>
+  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
   import { increment, decrement, page } from '../../stores/pageStore.js';
   import { loading, err } from '../../stores/loadStore.js';
   import Card from '../../components/card.svelte';
@@ -23,6 +25,7 @@
 
   export let movies;
   let section = 'popular';
+  let isMounted = false;
 
   const getMovies = async () => {
     loading.set(true);
@@ -49,6 +52,10 @@
     getMovies();
     window.scrollTo(0, 0);
   };
+
+  onMount(() => {
+    isMounted = true;
+  });
 </script>
 
 <div class="home">
@@ -96,8 +103,11 @@
 
   {#if $loading === true}
     <Loading />
-  {:else if $loading === false}
-    <div class="home__card-wrapper">
+  {:else if $loading === false && isMounted}
+    <div
+      class="home__card-wrapper"
+      transition:fade={{ delay: 250, duration: 500 }}
+    >
       {#each movies as movie}
         <Card {movie} />
       {/each}

@@ -1,4 +1,6 @@
 <script>
+  import { fade } from 'svelte/transition';
+  import { onMount } from 'svelte';
   import Loading from '../components/loading.svelte';
   import ErrorMsg from './../components/errorMsg.svelte';
   import { loading, err } from './../stores/loadStore.js';
@@ -6,6 +8,7 @@
   import Banner from '../components/banner.svelte';
   import Card from '../components/card.svelte';
 
+  let isMounted = false;
   let movies = null;
   let query = '';
 
@@ -31,6 +34,10 @@
   const onKeyPress = () => {
     if (query) searchHandler();
   };
+
+  onMount(() => {
+    isMounted = true;
+  });
 </script>
 
 <Banner>
@@ -51,19 +58,21 @@
   />
   <button on:click={searchHandler}>Search</button>
 </div>
-<div class="card-wrapper">
-  {#if $err !== null}
-    <ErrorMsg error={$err} />
-  {/if}
+{#if isMounted}
+  <div class="card-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+    {#if $err !== null}
+      <ErrorMsg error={$err} />
+    {/if}
 
-  {#if $loading === true}
-    <Loading />
-  {:else if movies !== null && $loading === false}
-    {#each movies as movie}
-      <Card {movie} />
-    {/each}
-  {/if}
-</div>
+    {#if $loading === true}
+      <Loading />
+    {:else if movies !== null && $loading === false}
+      {#each movies as movie}
+        <Card {movie} />
+      {/each}
+    {/if}
+  </div>
+{/if}
 
 <style>
   .banner__title {
