@@ -106,7 +106,7 @@
   {:else if $loading === false && isMounted}
     <div
       class="home__card-wrapper"
-      transition:fade={{ delay: 250, duration: 500 }}
+      transition:fade|local={{ delay: 250, duration: 500 }}
     >
       {#each movies as movie}
         <Card {movie} />

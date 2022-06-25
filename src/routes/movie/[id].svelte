@@ -29,7 +29,10 @@
 
 <Banner><h1 class="banner__title">Movie Details</h1></Banner>
 {#if isMounted}
-  <div class="details-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+  <div
+    class="details-wrapper"
+    transition:fade|local={{ delay: 250, duration: 300 }}
+  >
     <div class="details-wrapper--left">
       <button class="btn-back" on:click={() => goto('/movie')}>Back</button>
       <h1>{movie.original_title}</h1>

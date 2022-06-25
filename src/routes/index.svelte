@@ -59,7 +59,10 @@
   <button on:click={searchHandler}>Search</button>
 </div>
 {#if isMounted}
-  <div class="card-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+  <div
+    class="card-wrapper"
+    transition:fade|local={{ delay: 250, duration: 300 }}
+  >
     {#if $err !== null}
       <ErrorMsg error={$err} />
     {/if}

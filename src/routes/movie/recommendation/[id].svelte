@@ -36,7 +36,10 @@
   {#if movies.length === 0}
     <p>No movies found</p>
   {:else if isMounted}
-    <div class="card-wrapper" transition:fade={{ delay: 250, duration: 300 }}>
+    <div
+      class="card-wrapper"
+      transition:fade|local={{ delay: 250, duration: 300 }}
+    >
       {#each movies as movie}
         <Card {movie} />
       {/each}
