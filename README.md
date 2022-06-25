@@ -1,40 +1,6 @@
-# create-svelte
+## Nonton yuk!
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Merupakan sebuah website yang menyediakan database film-film yang diperoleh dari https://www.themoviedb.org/. Website ini dibuat dengan tujuan melatih pemahaman saya menggunakan Svelte Kit. 
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
-```
-
-> Note: the `@next` is temporary
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+Update pada 25 Juni 2022:
+Saya melakukan bug fixing di production, karena sebelumnya website dapat live tetapi tidak bisa berfungsi dengan baik. Hal ini dikarenakan salah menggunakan adapter, sehingga cara yang saya lakukan adalah mengganti adapter menjadi @sveltejs/adapter-netlify. Sekarang webite ini dapat diakses melalui https://nontonyuk-gp.netlify.app/.
