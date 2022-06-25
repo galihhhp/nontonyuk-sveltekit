@@ -1,10 +1,7 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from '@sveltejs/adapter-netlify';
 
-// Make sure this is present
-const config = {
+export default {
   kit: {
     adapter: adapter(),
   },
 };
-
-export default config;
